@@ -4,7 +4,7 @@ const ctx = esbuild.context(
         tsconfig: "tsconfig.json",
         bundle: true,
         target: ["es2022"],
-        minify: false,
+        minify: true,
         sourcemap: false,
         ignoreAnnotations: true,
         platform: "node",
