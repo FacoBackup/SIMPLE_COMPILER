@@ -2576,6 +2576,7 @@ COLUMN: ${column}`);
             this.handleVariable(next);
             break;
           case SyntaxSymbol_default.LET:
+          case SyntaxSymbol_default.INPUT:
             this.stack.push(current);
             break;
           case SyntaxSymbol_default.END_OF_LINE:
@@ -2586,7 +2587,7 @@ COLUMN: ${column}`);
       return this.exceptions;
     }
     handleVariable(next) {
-      if (this.stack[0]?.type === TokenType_default.LET) {
+      if (this.stack[0]?.type === TokenType_default.LET || this.stack[0]?.type === TokenType_default.INPUT) {
         this.declared.set(this.currentToken.symbolAddress, this.currentToken.line);
         this.stack.length = 0;
         return;
@@ -2641,18 +2642,36 @@ COLUMN: ${column}`);
   var path = __toESM(__require("path"));
   async function main() {
     const FILE_NAME = process.argv[2];
-    const sourceCode = (await fs.promises.readFile(path.resolve(__dirname + path.sep + FILE_NAME))).toString();
-    const errors = Compiler.compile(sourceCode, true);
+    let sourceCode = (await fs.promises.readFile(path.resolve(__dirname + path.sep + FILE_NAME))).toString();
+    sourceCode = sourceCode.split("\n").filter((l) => l.replace(/(\s+)/g, "").length !== 0).join("\n");
+    const errors = Compiler.compile(sourceCode);
     const splitSource = sourceCode.split("\n");
-    if (errors instanceof SyntaxError) {
-      console.log(`
-        MESSAGE:\x1B[31m ${errors.message} \x1B[0m
-        LINE:\x1B[31m ${errors.line} \x1B[0m
-        COLUMN:\x1B[31m ${errors.column} \x1B[0m
-        LINE WITH ERROR ----> \x1B[31m ${splitSource[errors.line - 1]} \x1B[0m
-        `.replace(/^(\s+)/gm, ""));
-    } else
+    console.log("\n-----------------------------------------\n");
+    console.log("Lexical errors: ");
+    errors.lexicalErrors.map((error) => {
+      logError(error, splitSource);
+    });
+    console.log("\n-----------------------------------------\n");
+    console.log("Syntactic errors: ");
+    errors.syntaxErrors.map((error) => {
+      logError(error, splitSource);
+    });
+    console.log("\n-----------------------------------------\n");
+    console.log("Semantic errors: ");
+    errors.semanticErrors.map((error) => {
+      logError(error, splitSource);
+    });
+    console.log("\n-----------------------------------------\n");
+    if (errors.semanticErrors.length === 0 && errors.syntaxErrors.length === 0 && errors.lexicalErrors.length === 0)
       console.log("\x1B[32mThe source-code provided is valid \x1B[0m");
   }
   main().catch(console.error);
+  function logError(error, splitSource) {
+    console.log(`
+    MESSAGE:\x1B[31m ${error.message} \x1B[0m
+    LINE:\x1B[31m ${error.line} \x1B[0m
+    COLUMN:\x1B[31m ${error.column} \x1B[0m
+    LINE WITH ERROR ----> \x1B[31m ${splitSource[error.line - 1]} \x1B[0m
+    `);
+  }
 })();

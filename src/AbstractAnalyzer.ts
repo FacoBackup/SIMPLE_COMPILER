@@ -12,6 +12,7 @@ export default abstract class AbstractAnalyzer implements IAnalyzer {
     protected originalTokens: Token[] = []
     protected isOnIf: boolean;
     protected stack: Token[] = [];
+    protected skipErrors = true
 
     protected shift() {
         const first = this.tokens[0]
@@ -50,7 +51,9 @@ export default abstract class AbstractAnalyzer implements IAnalyzer {
 
     protected throwError(message: string, line: number = this.currentToken.line, column: number = this.currentToken.column) {
         this.exceptions.push(this.createError(message, line, column))
-        this.skipLine()
+        if(!this.skipErrors) {
+            this.skipLine()
+        }
     }
 
     protected skipLine(){

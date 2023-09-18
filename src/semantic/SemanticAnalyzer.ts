@@ -10,6 +10,7 @@ export default class SemanticAnalyzer extends AbstractAnalyzer {
     private symbolMap: Map<string, number>;
     private declared: Map<number, number> = new Map();
 
+
     constructor(tokens: Token[], symbolMap: Map<string, number>) {
         super()
         this.tokens = tokens
@@ -17,6 +18,7 @@ export default class SemanticAnalyzer extends AbstractAnalyzer {
         Array.from(symbolMap.entries()).forEach(entry => {
             this.reversedSymbolMap.set(entry[1], entry[0])
         })
+        this.skipErrors = false
     }
 
     analyze(): ICompilerError[] {
@@ -36,9 +38,10 @@ export default class SemanticAnalyzer extends AbstractAnalyzer {
                     this.handleGOTO(next);
                     break
                 case SyntaxSymbol.VARIABLE:
-                    this.handleVariable(next);
+                    this.handleVariable();
                     break
                 case SyntaxSymbol.LET:
+                case SyntaxSymbol.INPUT:
                     this.stack.push(current)
                     break
                 case SyntaxSymbol.END_OF_LINE:
@@ -49,12 +52,16 @@ export default class SemanticAnalyzer extends AbstractAnalyzer {
         return this.exceptions;
     }
 
-    private handleVariable(next: SyntaxInput) {
-        if (this.stack[0]?.type === TokenType.LET) {
+    private handleVariable() {
+        if (!this.declared.has(this.currentToken.symbolAddress) && (this.stack[0]?.type === TokenType.LET || this.stack[0]?.type === TokenType.INPUT)) {
             this.declared.set(this.currentToken.symbolAddress, this.currentToken.line)
             this.stack.length = 0
             return
         }
+        else if(this.declared.has(this.currentToken.symbolAddress)) {
+            this.stack.length = 0
+        }
+
         const noVariableDeclarationFound = this.declared.get(this.currentToken.symbolAddress) == null
         const isDeclarationOnSameLine = this.declared.get(this.currentToken.symbolAddress) === this.currentToken.line
         if (noVariableDeclarationFound || isDeclarationOnSameLine) {
