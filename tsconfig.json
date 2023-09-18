@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "module": "commonjs",
     "target": "es2022",
-    "sourceMap": true
+    "module": "es2022",
+    "moduleResolution": "node"
   },
+  "typeRoots": [
+    "./compiler.g.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

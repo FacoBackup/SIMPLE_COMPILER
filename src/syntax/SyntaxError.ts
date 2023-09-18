@@ -1,4 +1,4 @@
-export default class SyntacticError extends Error{
+export default class SyntaxError extends Error implements ICompilerError {
     line: number
     column: number
     message: string
@@ -9,6 +9,8 @@ export default class SyntacticError extends Error{
     static UNEXPECTED_ERROR = "Unexpected error"
     static EXPECTED_EXPRESSION = "Expected expression but found otherwise";
     static EXPECTED_VARIABLE_DECLARATION = "Expected variable declaration but found otherwise";
+    static MISSING_LINE_ENUMERATION = "Missing line enumeration";
+    static UNEXPECTED_COMMAND_BEFORE_COMMAND  = "Unexpected command before command";
 
     constructor(message: string, line: number, column: number) {
         super(` Syntactic analysis error: \n- LINE: ${line}\n- COLUMN: ${column}\n- MESSAGE: ${message}`);

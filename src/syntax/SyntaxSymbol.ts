@@ -1,4 +1,4 @@
-enum SyntacticSymbol {
+enum SyntaxSymbol {
     // TEXTO
     LET,
     INTEGER,
@@ -33,4 +33,4 @@ enum SyntacticSymbol {
     END,
 }
 
-export default SyntacticSymbol
+export default SyntaxSymbol

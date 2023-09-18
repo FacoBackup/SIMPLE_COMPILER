@@ -1,67 +1,67 @@
 import Token from "../lexical/Token";
 import TokenType from "../lexical/TokenType";
-import SyntacticSymbol from "./SyntacticSymbol";
+import SyntaxSymbol from "./SyntaxSymbol";
 
-export default class SyntacticInput {
+export default class SyntaxInput {
     private readonly _token: Token
 
     constructor(token: Token) {
         this._token = token
     }
 
-    getSymbol(): SyntacticSymbol {
+    getSymbol(): SyntaxSymbol {
         if (!this._token)
             return null
         const tokenType = this._token.type;
         switch (tokenType) {
             case TokenType.LET:
-                return SyntacticSymbol.LET
+                return SyntaxSymbol.LET
             case TokenType.VARIABLE:
-                return SyntacticSymbol.VARIABLE
+                return SyntaxSymbol.VARIABLE
             case TokenType.INTEGER :
-                return SyntacticSymbol.INTEGER
+                return SyntaxSymbol.INTEGER
             case TokenType.INPUT :// Accepts only variable
-                return SyntacticSymbol.INPUT
+                return SyntaxSymbol.INPUT
             case TokenType.PRINT :// Accepts variable or number
-                return SyntacticSymbol.PRINT
+                return SyntaxSymbol.PRINT
             case TokenType.ERROR:
                 return null
             case TokenType.END_OF_LINE:
-                return SyntacticSymbol.END_OF_LINE
+                return SyntaxSymbol.END_OF_LINE
             case TokenType.END_OF_INPUT:
-                return SyntacticSymbol.END_OF_INPUT
+                return SyntaxSymbol.END_OF_INPUT
             case TokenType.ASSIGNMENT:
-                return SyntacticSymbol.ASSIGNMENT
+                return SyntaxSymbol.ASSIGNMENT
             case TokenType.ADD:
-                return SyntacticSymbol.ADD
+                return SyntaxSymbol.ADD
             case TokenType.SUBTRACT:
-                return SyntacticSymbol.SUBTRACT
+                return SyntaxSymbol.SUBTRACT
             case TokenType.MULTIPLY:
-                return SyntacticSymbol.MULTIPLY
+                return SyntaxSymbol.MULTIPLY
             case TokenType.DIVIDE:
-                return SyntacticSymbol.DIVIDE
+                return SyntaxSymbol.DIVIDE
             case TokenType.MODULO:
-                return SyntacticSymbol.MODULO
+                return SyntaxSymbol.MODULO
             case TokenType.EQ:
-                return SyntacticSymbol.EQ
+                return SyntaxSymbol.EQ
             case TokenType.NE:
-                return SyntacticSymbol.NE
+                return SyntaxSymbol.NE
             case TokenType.GT:
-                return SyntacticSymbol.GT
+                return SyntaxSymbol.GT
             case TokenType.LT:
-                return SyntacticSymbol.LT
+                return SyntaxSymbol.LT
             case TokenType.GE:
-                return SyntacticSymbol.GE
+                return SyntaxSymbol.GE
             case TokenType.LE:
-                return SyntacticSymbol.LE
+                return SyntaxSymbol.LE
             case TokenType.REM:
-                return SyntacticSymbol.REM
+                return SyntaxSymbol.REM
             case TokenType.GOTO:
-                return SyntacticSymbol.GOTO
+                return SyntaxSymbol.GOTO
             case TokenType.IF:
-                return SyntacticSymbol.IF
+                return SyntaxSymbol.IF
             case TokenType.END:
-                return SyntacticSymbol.END
+                return SyntaxSymbol.END
         }
         return null
     }

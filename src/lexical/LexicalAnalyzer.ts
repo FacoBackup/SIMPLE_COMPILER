@@ -1,8 +1,9 @@
 import Token from "./Token";
 import Lexeme from "./Lexeme";
 import TokenType from "./TokenType";
+import LexicalError from "./LexicalError";
 
-export default class LexicalAnalyzer {
+export default class LexicalAnalyzer implements IAnalyzer {
     error: boolean = false
     source: string;
     /**
@@ -13,7 +14,16 @@ export default class LexicalAnalyzer {
     lexeme: Lexeme;
     column: number = 0
     line: number = 1;
-    charGenerator: Generator<string|number>
+    charGenerator: Generator<string | number>
+    private exceptions: LexicalError[] = [];
+
+    constructor(source: string) {
+        this.source = source
+        this.tokens = []
+        this.symbolTable.clear();
+        this.error = false
+        this.charGenerator = this.next()
+    }
 
     addSymbolTable(lexeme: string): number {
         if (!this.symbolTable.has(lexeme)) {
@@ -32,7 +42,7 @@ export default class LexicalAnalyzer {
                 this.tokens.push(this.lexeme.toToken());
             }
         } else {
-            console.error("INVALID TOKEN: ", this.lexeme.toString())
+            this.exceptions.push(new LexicalError(this.lexeme.toString(), this.line, this.column))
             this.error = true;
         }
     }
@@ -53,18 +63,11 @@ export default class LexicalAnalyzer {
     }
 
 
-    parser(source: string): boolean {
-        this.source = source;
-        this.tokens = []
-        this.symbolTable.clear();
-        this.error = false
-        this.charGenerator = this.next()
-
+    analyze(): LexicalError[] {
         while (this.source != null) {
             this.q0()
         }
-
-        return this.error;
+        return this.exceptions;
     }
 
 

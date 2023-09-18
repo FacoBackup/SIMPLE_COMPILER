@@ -5,8 +5,8 @@ import EXPECTED_LEXICAL_OUTPUT from "./EXPECTED_LEXICAL_OUTPUT";
 
 let lexicalInstance: LexicalAnalyzer
 beforeEach(() => {
-    lexicalInstance = new LexicalAnalyzer()
-    lexicalInstance.parser(SAMPLE_CODE)
+    lexicalInstance = new LexicalAnalyzer(SAMPLE_CODE)
+    lexicalInstance.analyze()
 })
 
 test('Is compilation valid', () => {
