@@ -14,5 +14,8 @@ const ctx = esbuild.context(
     })
 
 ctx.catch(console.error)
-ctx.then(e => e.watch())
+ctx.then(e => {
+    e.watch().catch()
+    e.dispose().catch()
+})
 
