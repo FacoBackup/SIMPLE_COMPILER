@@ -57,9 +57,8 @@ Semantic errors:
 
 ```
 > ### OBS
-> Um erro acontecendo na etapa lexica irá bloquear a execução das etapas sintaticas e semanticas, assim como um erro na etapa sintatica irá bloquear a execução da etapa semantica
+- Um erro acontecendo na etapa lexica irá bloquear a execução das etapas sintaticas e semanticas, assim como um erro na etapa sintatica irá bloquear a execução da etapa semantica
 
-> Sessões em vazio não contém erros
+- Sessões em vazio não contém erros
 
-> Caso o código seja válido, será enviada a mensagem
-> `The source-code provided is valid`
+- Caso o código seja válido, será enviada a mensagem `The source-code provided is valid`
