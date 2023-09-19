@@ -1,7 +1,7 @@
 import {test} from '@jest/globals';
 import SAMPLE_CODE from "../static/SAMPLE_CODE";
 import LexicalAnalyzer from "../src/lexical/LexicalAnalyzer";
-import EXPECTED_LEXICAL_OUTPUT from "./EXPECTED_LEXICAL_OUTPUT";
+import EXPECTED_LEXICAL_OUTPUT from "../static/EXPECTED_LEXICAL_OUTPUT";
 
 let lexicalInstance: LexicalAnalyzer
 beforeEach(() => {
