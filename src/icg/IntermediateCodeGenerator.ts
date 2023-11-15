@@ -4,7 +4,7 @@ import SyntaxInput from "../syntax/SyntaxInput";
 import TokenType from "../lexical/TokenType";
 import SyntaxSymbol from "../syntax/SyntaxSymbol";
 import ICGError from "./ICGError";
-import AbstractSimpleCommand from "./AbstractSimpleCommand";
+import AbstractCommand from "./AbstractCommand";
 import CommandProcessor from "./CommandProcessor";
 import IfCommand from "./commands/IfCommand";
 import GotoCommand from "./commands/GotoCommand";
@@ -17,7 +17,7 @@ export default class IntermediateCodeGenerator extends AbstractAnalyzer {
     private symbolMap: Map<string, number>;
     private lines: Token[][] = []
     private currentLine: Token[] = []
-    private commands: AbstractSimpleCommand[] = []
+    private commands: AbstractCommand[] = []
     private code: string = null
 
     constructor(tokens: Token[], symbolMap: Map<string, number>) {

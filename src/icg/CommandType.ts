@@ -1,4 +1,4 @@
-enum SimpleCommandType {
+enum CommandType {
     READ = "+10",
     WRITE = "+11",
     LOAD = "+20",
@@ -14,4 +14,4 @@ enum SimpleCommandType {
     HALT = "+4300"
 }
 
-export default SimpleCommandType
+export default CommandType

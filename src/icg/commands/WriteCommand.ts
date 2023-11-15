@@ -1,14 +1,14 @@
-import AbstractSimpleCommand from "../AbstractSimpleCommand";
+import AbstractCommand from "../AbstractCommand";
 import TemporarySymbol from "../TemporarySymbol";
-import SimpleCommandType from "../SimpleCommandType";
+import CommandType from "../CommandType";
 
 /**
  * print
  */
-export default class WriteCommand extends AbstractSimpleCommand{
+export default class WriteCommand extends AbstractCommand{
     getCodeLines(index: number, symbols: { [p: number]: TemporarySymbol }, reversedSymbolMap: Map<number, string>): string{
         const [printT, valueT] = this.tokens
-        return `${SimpleCommandType.WRITE}${symbols[valueT.symbolAddress].getPlaceholder()}`;
+        return `${CommandType.WRITE}${AbstractCommand.getPlaceholder(valueT, symbols, reversedSymbolMap)}`;
     }
 
 }

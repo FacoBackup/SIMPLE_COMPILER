@@ -1,14 +1,14 @@
-import AbstractSimpleCommand from "../AbstractSimpleCommand";
+import AbstractCommand from "../AbstractCommand";
 import TemporarySymbol from "../TemporarySymbol";
 import TokenType from "../../lexical/TokenType";
-import SimpleCommandType from "../SimpleCommandType";
+import CommandType from "../CommandType";
 import GotoCommand from "./GotoCommand";
 import Token from "../../lexical/Token";
 
 /**
  * IF, its condition and the command after condition
  */
-export default class IfCommand extends AbstractSimpleCommand {
+export default class IfCommand extends AbstractCommand {
     private placeholder: string;
     private targetLineToken: Token;
 
@@ -20,34 +20,34 @@ export default class IfCommand extends AbstractSimpleCommand {
         this.placeholder = GotoCommand.MARKER + index + GotoCommand.MARKER;
         this.targetLineToken = lineT;
         let code = ""
-        let aVPlaceholder = symbols[aValueT.symbolAddress].getPlaceholder();
-        let bVPlaceholder = symbols[bValueT.symbolAddress].getPlaceholder();
+        const aVPlaceholder = AbstractCommand.getPlaceholder(aValueT, symbols, reversedSymbolMap);
+        const bVPlaceholder = AbstractCommand.getPlaceholder(bValueT, symbols, reversedSymbolMap);
 
         switch (comparisonT.type) {
             case TokenType.EQ:
-                code = `${SimpleCommandType.LOAD}${aVPlaceholder}\n`
-                code += `${SimpleCommandType.SUBTRACT}${bVPlaceholder}\n`
-                code += `${SimpleCommandType.BRANCH_ZERO}${this.placeholder}`
+                code = `${CommandType.LOAD}${aVPlaceholder}\n`
+                code += `${CommandType.SUBTRACT}${bVPlaceholder}\n`
+                code += `${CommandType.BRANCH_ZERO}${this.placeholder}`
                 break
             case TokenType.NE:
-                code = `${SimpleCommandType.LOAD}${aVPlaceholder}\n`
-                code += `${SimpleCommandType.SUBTRACT}${bVPlaceholder}\n`
-                code += `${SimpleCommandType.BRANCH_NEG}${this.placeholder}\n`
+                code = `${CommandType.LOAD}${aVPlaceholder}\n`
+                code += `${CommandType.SUBTRACT}${bVPlaceholder}\n`
+                code += `${CommandType.BRANCH_NEG}${this.placeholder}\n`
 
-                code += `${SimpleCommandType.LOAD}${bVPlaceholder}\n`
-                code += `${SimpleCommandType.SUBTRACT}${aVPlaceholder}\n`
-                code += `${SimpleCommandType.BRANCH_NEG}${this.placeholder}`
+                code += `${CommandType.LOAD}${bVPlaceholder}\n`
+                code += `${CommandType.SUBTRACT}${aVPlaceholder}\n`
+                code += `${CommandType.BRANCH_NEG}${this.placeholder}`
 
                 break
             case TokenType.LT:
-                code = `${SimpleCommandType.LOAD}${aVPlaceholder}\n`
-                code += `${SimpleCommandType.SUBTRACT}${bVPlaceholder}\n`
-                code += `${SimpleCommandType.BRANCH_NEG}${this.placeholder}`
+                code = `${CommandType.LOAD}${aVPlaceholder}\n`
+                code += `${CommandType.SUBTRACT}${bVPlaceholder}\n`
+                code += `${CommandType.BRANCH_NEG}${this.placeholder}`
                 break
             case TokenType.GT:
-                code = `${SimpleCommandType.LOAD}${bVPlaceholder}\n`
-                code += `${SimpleCommandType.SUBTRACT}${aVPlaceholder}\n`
-                code += `${SimpleCommandType.BRANCH_NEG}${this.placeholder}`
+                code = `${CommandType.LOAD}${bVPlaceholder}\n`
+                code += `${CommandType.SUBTRACT}${aVPlaceholder}\n`
+                code += `${CommandType.BRANCH_NEG}${this.placeholder}`
                 break
         }
 

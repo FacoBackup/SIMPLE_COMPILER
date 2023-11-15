@@ -1,5 +1,5 @@
-import AbstractSimpleCommand from "./AbstractSimpleCommand";
-import SimpleCommandType from "./SimpleCommandType";
+import AbstractCommand from "./AbstractCommand";
+import CommandType from "./CommandType";
 import TokenType from "../lexical/TokenType";
 import TemporarySymbol from "./TemporarySymbol";
 import GotoCommand from "./commands/GotoCommand";
@@ -11,7 +11,7 @@ type Symbols = { [key: number]: TemporarySymbol }
 
 export default class CommandProcessor {
 
-    static process(commands: AbstractSimpleCommand[], reversedSymbolMap: Map<number, string>): string {
+    static process(commands: AbstractCommand[], reversedSymbolMap: Map<number, string>): string {
         const allTokens = commands.map(c => c.getTokens()).flat()
         const symbols: Symbols = {}
         const mappedLines: MappedLines = {}
@@ -23,21 +23,21 @@ export default class CommandProcessor {
     }
 
     private static replaceTemporaryMarkers(symbols: Symbols, code: string, reversedSymbolMap: Map<number, string>) {
-        let symbolsToDeclare = Object.entries(symbols);
+        const symbolsToDeclare = Object.values(symbols);
         let index = code.split("\n").length
         symbolsToDeclare.forEach(symbol => {
-            code += symbol[1].getDeclaration(reversedSymbolMap, index) + "\n"
+            code += symbol.getDeclaration(reversedSymbolMap, index) + "\n"
             index++;
         })
 
         symbolsToDeclare.forEach(symbol => {
-            code = code.replaceAll(symbol[1].getPlaceholder(), symbol[1].getReplacement())
+            code = code.replaceAll(symbol.getPlaceholder(), symbol.getReplacement())
         })
 
         return code
     }
 
-    private static generateCode(commands: AbstractSimpleCommand[], symbols: Symbols, reversedSymbolMap: Map<number, string>, mappedLines: MappedLines): string {
+    private static generateCode(commands: AbstractCommand[], symbols: Symbols, reversedSymbolMap: Map<number, string>, mappedLines: MappedLines): string {
         let index = 0;
         let code = ""
         for (let i = 0; i < commands.length; i++) {
@@ -50,7 +50,7 @@ export default class CommandProcessor {
             index += codeLines.split("\n").length
             code += codeLines + "\n"
         }
-        return code + SimpleCommandType.HALT + "\n";
+        return code + CommandType.HALT + "\n";
     }
 
     private static prepare(allTokens: Token[], symbols: Symbols, reversedSymbolMap: Map<number, string>, mappedLines: MappedLines) {
@@ -58,17 +58,18 @@ export default class CommandProcessor {
             const current = allTokens[i]
             const previous = i - 1 >= 0 ? allTokens[i - 1] : undefined
             if (current.type === TokenType.VARIABLE || current.type === TokenType.INTEGER) {
+                const symbol = reversedSymbolMap.get(current.symbolAddress);
                 if (previous?.type !== TokenType.GOTO) {
-                    symbols[current.symbolAddress] = new TemporarySymbol(current, previous, i)
+                    symbols[symbol] = new TemporarySymbol(current, previous, i)
                 } else {
-                    const desiredLine = parseInt(reversedSymbolMap.get(current.symbolAddress));
+                    const desiredLine = parseInt(symbol);
                     mappedLines[desiredLine] = -1
                 }
             }
         }
     }
 
-    private static replaceGotoLines(commands: AbstractSimpleCommand[], reversedSymbolMap: Map<number, string>, code: string, mappedLines: MappedLines, allTokens: Token[]): string {
+    private static replaceGotoLines(commands: AbstractCommand[], reversedSymbolMap: Map<number, string>, code: string, mappedLines: MappedLines, allTokens: Token[]): string {
         for (let i = 0; i < commands.length; i++) {
             const current = commands[i];
             if (current instanceof GotoCommand || current instanceof IfCommand) {

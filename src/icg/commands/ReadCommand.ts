@@ -1,14 +1,14 @@
-import AbstractSimpleCommand from "../AbstractSimpleCommand";
+import AbstractCommand from "../AbstractCommand";
 import TemporarySymbol from "../TemporarySymbol";
-import SimpleCommandType from "../SimpleCommandType";
+import CommandType from "../CommandType";
 
 /**
  * Input
  */
-export default class ReadCommand extends AbstractSimpleCommand{
+export default class ReadCommand extends AbstractCommand{
     getCodeLines(index: number, symbols: { [p: number]: TemporarySymbol }, reversedSymbolMap: Map<number, string>): string{
         const [readT, valueT] = this.tokens
-        return `${SimpleCommandType.READ}${symbols[valueT.symbolAddress].getPlaceholder()}`;
+        return `${CommandType.READ}${AbstractCommand.getPlaceholder(valueT, symbols, reversedSymbolMap)}`;
     }
 
 }

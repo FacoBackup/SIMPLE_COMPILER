@@ -1,14 +1,14 @@
-import AbstractSimpleCommand from "../AbstractSimpleCommand";
+import AbstractCommand from "../AbstractCommand";
 import TemporarySymbol from "../TemporarySymbol";
 import TokenType from "../../lexical/TokenType";
 import Token from "../../lexical/Token";
-import SimpleCommandType from "../SimpleCommandType";
+import CommandType from "../CommandType";
 
 
 /**
  * Handles arithmetic expressions and assignment to variable
  */
-export default class ArithmeticCommand extends AbstractSimpleCommand {
+export default class ArithmeticCommand extends AbstractCommand {
     getCodeLines(index: number, symbols: {
         [p: number]: TemporarySymbol
     }, reversedSymbolMap: Map<number, string>): string {
@@ -25,38 +25,38 @@ export default class ArithmeticCommand extends AbstractSimpleCommand {
         switch (tokensToProcess.length) {
             case 2: { // EX: let a = 1
                 const [targetVariableT, aVariableT] = tokensToProcess
-                let code = `${SimpleCommandType.LOAD}${symbols[aVariableT.symbolAddress].getPlaceholder()}\n`;
-                code += `${SimpleCommandType.STORE}${symbols[targetVariableT.symbolAddress].getPlaceholder()}`
+                let code = `${CommandType.LOAD}${AbstractCommand.getPlaceholder(aVariableT, symbols, reversedSymbolMap)}\n`;
+                code += `${CommandType.STORE}${AbstractCommand.getPlaceholder(targetVariableT, symbols, reversedSymbolMap)}`
                 return code;
             }
             case 3: { // EX: let a = -1
                 const [targetVariableT, _, aVariableT] = tokensToProcess
-                let code = `${SimpleCommandType.LOAD}${symbols[aVariableT.symbolAddress].getPlaceholder()}\n`;
-                code += `${SimpleCommandType.STORE}${symbols[targetVariableT.symbolAddress].getPlaceholder()}`
+                let code = `${CommandType.LOAD}${AbstractCommand.getPlaceholder(aVariableT, symbols, reversedSymbolMap)}\n`;
+                code += `${CommandType.STORE}${AbstractCommand.getPlaceholder(targetVariableT, symbols, reversedSymbolMap)}`
                 return code;
             }
             case 4: { // EX: let a = b + 1
                 const [targetVariableT, aVariableT, operationT, bVariableT] = tokensToProcess
-                const bVariablePlaceholder = symbols[bVariableT.symbolAddress].getPlaceholder();
-                let code = `${SimpleCommandType.LOAD}${symbols[aVariableT.symbolAddress].getPlaceholder()}\n`;
+                const bVariablePlaceholder = AbstractCommand.getPlaceholder(bVariableT, symbols, reversedSymbolMap);
+                let code = `${CommandType.LOAD}${AbstractCommand.getPlaceholder(aVariableT, symbols, reversedSymbolMap)}\n`;
                 switch (operationT.type) {
                     case TokenType.DIVIDE:
-                        code += `${SimpleCommandType.DIVIDE}${bVariablePlaceholder}`
+                        code += `${CommandType.DIVIDE}${bVariablePlaceholder}`
                         break
                     case TokenType.ADD:
-                        code += `${SimpleCommandType.ADD}${bVariablePlaceholder}`
+                        code += `${CommandType.ADD}${bVariablePlaceholder}`
                         break
                     case TokenType.SUBTRACT:
-                        code += `${SimpleCommandType.SUBTRACT}${bVariablePlaceholder}`
+                        code += `${CommandType.SUBTRACT}${bVariablePlaceholder}`
                         break
                     case TokenType.MULTIPLY:
-                        code += `${SimpleCommandType.MULTIPLY}${bVariablePlaceholder}`
+                        code += `${CommandType.MULTIPLY}${bVariablePlaceholder}`
                         break
                     case TokenType.MODULO:
-                        code += `${SimpleCommandType.MODULE}${bVariablePlaceholder}`
+                        code += `${CommandType.MODULE}${bVariablePlaceholder}`
                         break
                 }
-                code += `\n${SimpleCommandType.STORE}${symbols[targetVariableT.symbolAddress].getPlaceholder()}`
+                code += `\n${CommandType.STORE}${AbstractCommand.getPlaceholder(targetVariableT, symbols, reversedSymbolMap)}`
                 return code;
             }
 

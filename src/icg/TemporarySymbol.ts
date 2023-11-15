@@ -9,7 +9,7 @@ export default class TemporarySymbol {
 
     constructor(token: Token, previousToken: Token, index: number) {
         this.token = token
-        this.previousToken = token
+        this.previousToken = previousToken
         this.index = index
     }
 

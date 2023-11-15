@@ -1,12 +1,12 @@
-import AbstractSimpleCommand from "../AbstractSimpleCommand";
+import AbstractCommand from "../AbstractCommand";
 import TemporarySymbol from "../TemporarySymbol";
-import SimpleCommandType from "../SimpleCommandType";
+import CommandType from "../CommandType";
 
 
 /**
  * GOTO
  */
-export default class GotoCommand extends AbstractSimpleCommand {
+export default class GotoCommand extends AbstractCommand {
     private placeholder: string
     static MARKER = "GT"
 
@@ -14,7 +14,7 @@ export default class GotoCommand extends AbstractSimpleCommand {
         [p: number]: TemporarySymbol
     }, reversedSymbolMap: Map<number, string>): string {
         this.placeholder = GotoCommand.MARKER + index + GotoCommand.MARKER
-        return `${SimpleCommandType.BRANCH}${this.placeholder}`;
+        return `${CommandType.BRANCH}${this.placeholder}`;
     }
 
     getPlaceholder() {
