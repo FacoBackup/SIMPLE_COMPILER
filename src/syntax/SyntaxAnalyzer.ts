@@ -74,8 +74,8 @@ export default class SyntaxAnalyzer extends AbstractAnalyzer {
                     break
                 //PALAVRAS RESERVADAS
                 case SyntaxSymbol.VARIABLE :// Identificador de variavel
-                case SyntaxSymbol.LET :// Identificador de variavel
-                case SyntaxSymbol.INTEGER :// Identificador de variavel
+                case SyntaxSymbol.LET :
+                case SyntaxSymbol.INTEGER :
                     this.stack.push(current)
                     break
                 case SyntaxSymbol.GOTO: // HAS TO RECIEVE NUMBER
