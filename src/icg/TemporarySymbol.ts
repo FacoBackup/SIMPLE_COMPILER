@@ -5,9 +5,11 @@ export default class TemporarySymbol {
     private token: Token
     private index: number;
     private currentLine: number;
+    private previousToken: Token;
 
-    constructor(token: Token, index: number) {
+    constructor(token: Token, previousToken: Token, index: number) {
         this.token = token
+        this.previousToken = token
         this.index = index
     }
 
@@ -25,8 +27,8 @@ export default class TemporarySymbol {
         this.currentLine = currentLine;
         if (this.token.type === TokenType.INTEGER) {
             let symbolValue = reversedSymbolMap.get(this.token.symbolAddress);
-            let value = parseInt(symbolValue);
-            if (value < 0) {
+            let previousTokenType = this.previousToken.type;
+            if (previousTokenType === TokenType.SUBTRACT) {
                 return "-000" + symbolValue
             }
             return "+000" + symbolValue

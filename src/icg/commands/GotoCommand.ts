@@ -1,5 +1,6 @@
 import AbstractSimpleCommand from "../AbstractSimpleCommand";
 import TemporarySymbol from "../TemporarySymbol";
+import SimpleCommandType from "../SimpleCommandType";
 
 
 /**
@@ -8,9 +9,12 @@ import TemporarySymbol from "../TemporarySymbol";
 export default class GotoCommand extends AbstractSimpleCommand {
     private placeholder: string
     static MARKER = "GT"
-    getCodeLines(index: number, symbols: { [key: number]: TemporarySymbol }): string {
+
+    getCodeLines(index: number, symbols: {
+        [p: number]: TemporarySymbol
+    }, reversedSymbolMap: Map<number, string>): string {
         this.placeholder = GotoCommand.MARKER + index + GotoCommand.MARKER
-        return "";
+        return `${SimpleCommandType.BRANCH}${this.placeholder}`;
     }
 
     getPlaceholder() {

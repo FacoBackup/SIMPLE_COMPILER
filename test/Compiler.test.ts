@@ -13,6 +13,12 @@ test('Valid code', () => {
     expect(exceptions.syntaxErrors.length).toEqual(0)
 });
 
+test('Compile', () => {
+    const result = Compiler.compile(SAMPLE_CODE)
+
+    expect(result.intermediateCode).toEqual("")
+});
+
 
 test('MISSING_LINE_ENUMERATION', () => {
     const exceptions = Compiler.compile(SAMPLE_CODE_WITH_ERROR.MISSING_LINE_ENUMERATION)

@@ -68,20 +68,24 @@ export default class IntermediateCodeGenerator extends AbstractAnalyzer {
             switch (symbol) {
                 case SyntaxSymbol.GOTO:
                     this.commands.push(new GotoCommand(line))
-                    break
+                    return
+
                 case SyntaxSymbol.IF:
                     this.commands.push(new IfCommand(line))
-                    break
+                    return
                 case SyntaxSymbol.LET:
                 case SyntaxSymbol.ASSIGNMENT:
                     this.commands.push(new ArithmeticCommand(line))
-                    break
+                    return
+
                 case SyntaxSymbol.INPUT:
                     this.commands.push(new ReadCommand(line))
-                    break
+                    return
+
                 case SyntaxSymbol.PRINT:
                     this.commands.push(new WriteCommand(line))
-                    break
+                    return
+
             }
         }
     }

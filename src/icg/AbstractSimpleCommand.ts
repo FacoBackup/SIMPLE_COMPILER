@@ -3,7 +3,6 @@ import Token from "../lexical/Token";
 import TemporarySymbol from "./TemporarySymbol";
 
 export default abstract class AbstractSimpleCommand {
-    private _commandType: SimpleCommandType
     protected tokens: Token[] = []
     private _line: Token;
 
@@ -19,19 +18,10 @@ export default abstract class AbstractSimpleCommand {
         return parseInt(lineNumber);
     }
 
-    getOriginalLine(): number {
-        return this._line.line
-    }
 
-    get commandType(): SimpleCommandType {
-        return this._commandType;
-    }
-
-    set commandType(value: SimpleCommandType) {
-        this._commandType = value;
-    }
-
-    abstract getCodeLines(index: number, symbols: { [key: number]: TemporarySymbol }): string;
+    abstract getCodeLines(index: number, symbols: {
+        [p: number]: TemporarySymbol
+    }, reversedSymbolMap: Map<number, string>): string;
 
     getTokens(): Token[] {
         return this.tokens;
