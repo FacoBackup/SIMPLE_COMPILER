@@ -49,6 +49,18 @@ export default class IfCommand extends AbstractCommand {
                 code += `${CommandType.SUBTRACT}${aVPlaceholder}\n`
                 code += `${CommandType.BRANCH_NEG}${this.placeholder}`
                 break
+            case TokenType.LE:
+                code = `${CommandType.LOAD}${aVPlaceholder}\n`
+                code += `${CommandType.SUBTRACT}${bVPlaceholder}\n`
+                code += `${CommandType.BRANCH_NEG}${this.placeholder}\n`
+                code += `${CommandType.BRANCH_ZERO}${this.placeholder}`
+                break
+            case TokenType.GE:
+                code = `${CommandType.LOAD}${bVPlaceholder}\n`
+                code += `${CommandType.SUBTRACT}${aVPlaceholder}\n`
+                code += `${CommandType.BRANCH_NEG}${this.placeholder}\n`
+                code += `${CommandType.BRANCH_ZERO}${this.placeholder}`
+                break
         }
 
         return code;

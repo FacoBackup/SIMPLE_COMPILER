@@ -27,15 +27,17 @@ export default class CommandProcessor {
                 const command = p.substring(1, 3);
                 const variable = p.substring(3, p.length);
                 const commandName = CommandType.getName(command);
-
+                i++
                 if (command !== "00") {
                     let memoryType = "VARIABLE"
-                    if (command === CommandType.BRANCH_NEG || command === CommandType.BRANCH || command === CommandType.BRANCH_ZERO) {
-                        memoryType = "TARGET GOTO LINE"
+                    if (CommandType.BRANCH_NEG.includes(command) || CommandType.BRANCH.includes(command) || CommandType.BRANCH_ZERO.includes(command)) {
+                        memoryType = " GT LINE"
                     }
-                    return `${p}    #(${i < 10 ? "0" + i : i}) COMMAND: ${commandName} - ${memoryType}: ${variable}`
+                    if (CommandType.HALT.includes(command))
+                        return `${p}    #${i < 10 ? "0" + i : i} - COMMAND: ${commandName}`
+                    return `${p}    #${i < 10 ? "0" + i : i} - COMMAND: ${commandName.padEnd(11, " ")} - ${memoryType}: ${variable}`
                 } else {
-                    return `${p}    #VARIABLE DECLARATION ---> (${i < 10 ? "0" + i : i})`
+                    return `${p}    #${i < 10 ? "0" + i : i} - VARIABLE`
                 }
             }).join("\n")
         }
@@ -65,7 +67,7 @@ export default class CommandProcessor {
             let codeLines = command.getCodeLines(index, symbols, reversedSymbolMap);
             const parts = codeLines.split("\n");
             const line = command.getLine(reversedSymbolMap);
-            mappedLines[line] = index;
+            mappedLines[line] = index + 1;
 
             index += parts.length
             code += codeLines + "\n"
