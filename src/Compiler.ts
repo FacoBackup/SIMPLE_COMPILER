@@ -8,7 +8,7 @@ import SemanticAnalyzer from "./semantic/SemanticAnalyzer";
 import IntermediateCodeGenerator from "./icg/IntermediateCodeGenerator";
 
 export default class Compiler {
-    static compile(sc: string): {
+    static compile(sc: string, withDescription: boolean = false): {
         lexicalErrors: ICompilerError[],
         syntaxErrors: ICompilerError[],
         semanticErrors: ICompilerError[],
@@ -30,7 +30,7 @@ export default class Compiler {
         }
 
         if (semanticErrors.length === 0) {
-            const intermediateCodeGenerator = new IntermediateCodeGenerator(lexicalInstance.tokens, lexicalInstance.symbolTable)
+            const intermediateCodeGenerator = new IntermediateCodeGenerator(lexicalInstance.tokens, lexicalInstance.symbolTable, withDescription)
             intermediateCodeGenerator.analyze()
             intermediateCode = intermediateCodeGenerator.getCode();
         }

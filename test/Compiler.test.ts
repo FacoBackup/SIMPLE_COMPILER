@@ -4,6 +4,7 @@ import Compiler from "../src/Compiler";
 import SyntaxError from "../src/syntax/SyntaxError";
 import SAMPLE_CODE_WITH_ERROR from "../static/SAMPLE_CODE_WITH_ERROR";
 import SemanticError from "../src/semantic/SemanticError";
+import * as fs from "fs";
 
 test('Valid code', () => {
     const exceptions = Compiler.compile(SAMPLE_CODE)
@@ -13,9 +14,9 @@ test('Valid code', () => {
     expect(exceptions.syntaxErrors.length).toEqual(0)
 });
 
-test('Compile', () => {
-    const result = Compiler.compile(SAMPLE_CODE)
-
+test('Compile', async () => {
+    const result = Compiler.compile(SAMPLE_CODE, true)
+    await fs.promises.writeFile("generated.smc", result.intermediateCode)
     expect(result.intermediateCode).toEqual("")
 });
 

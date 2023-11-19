@@ -29,9 +29,9 @@ export default class TemporarySymbol {
             let symbolValue = reversedSymbolMap.get(this.token.symbolAddress);
             let previousTokenType = this.previousToken.type;
             if (previousTokenType === TokenType.SUBTRACT) {
-                return "-000" + symbolValue
+                return "-" + symbolValue.padStart(4, '0')
             }
-            return "+000" + symbolValue
+            return "+" + symbolValue.padStart(4, '0')
         } else {
             return "+0000"
         }

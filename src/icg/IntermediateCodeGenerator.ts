@@ -19,11 +19,13 @@ export default class IntermediateCodeGenerator extends AbstractAnalyzer {
     private currentLine: Token[] = []
     private commands: AbstractCommand[] = []
     private code: string = null
+    private withDescription = false
 
-    constructor(tokens: Token[], symbolMap: Map<string, number>) {
+    constructor(tokens: Token[], symbolMap: Map<string, number>, withDescription: boolean) {
         super()
         this.tokens = tokens
         this.symbolMap = symbolMap
+        this.withDescription = withDescription
         Array.from(symbolMap.entries()).forEach(entry => {
             this.reversedSymbolMap.set(entry[1], entry[0])
         })
@@ -56,7 +58,7 @@ export default class IntermediateCodeGenerator extends AbstractAnalyzer {
             this.processLine(currentLine)
         }
 
-        this.code = CommandProcessor.process(this.commands, this.reversedSymbolMap)
+        this.code = CommandProcessor.process(this.commands, this.reversedSymbolMap, this.withDescription)
         return this.exceptions;
     }
 

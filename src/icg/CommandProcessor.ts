@@ -11,14 +11,34 @@ type Symbols = { [key: number]: TemporarySymbol }
 
 export default class CommandProcessor {
 
-    static process(commands: AbstractCommand[], reversedSymbolMap: Map<number, string>): string {
+    static process(commands: AbstractCommand[], reversedSymbolMap: Map<number, string>, withDescription: boolean): string {
         const allTokens = commands.map(c => c.getTokens()).flat()
         const symbols: Symbols = {}
         const mappedLines: MappedLines = {}
         this.prepare(allTokens, symbols, reversedSymbolMap, mappedLines);
         let code = this.generateCode(commands, symbols, reversedSymbolMap, mappedLines)
-        code = this.replaceGotoLines(commands, reversedSymbolMap, code, mappedLines, allTokens);
+        code = this.replaceGotoLines(commands, reversedSymbolMap, code, mappedLines);
         code = this.replaceTemporaryMarkers(symbols, code, reversedSymbolMap)
+
+        if (withDescription) {
+            code = code.split("\n").map((p, i) => {
+                if (p.trim().length === 0)
+                    return ""
+                const command = p.substring(1, 3);
+                const variable = p.substring(3, p.length);
+                const commandName = CommandType.getName(command);
+
+                if (command !== "00") {
+                    let memoryType = "VARIABLE"
+                    if (command === CommandType.BRANCH_NEG || command === CommandType.BRANCH || command === CommandType.BRANCH_ZERO) {
+                        memoryType = "TARGET GOTO LINE"
+                    }
+                    return `${p}    #(${i < 10 ? "0" + i : i}) COMMAND: ${commandName} - ${memoryType}: ${variable}`
+                } else {
+                    return `${p}    #VARIABLE DECLARATION ---> (${i < 10 ? "0" + i : i})`
+                }
+            }).join("\n")
+        }
         return code;
     }
 
@@ -43,11 +63,11 @@ export default class CommandProcessor {
         for (let i = 0; i < commands.length; i++) {
             const command = commands[i]
             let codeLines = command.getCodeLines(index, symbols, reversedSymbolMap);
-
+            const parts = codeLines.split("\n");
             const line = command.getLine(reversedSymbolMap);
             mappedLines[line] = index;
 
-            index += codeLines.split("\n").length
+            index += parts.length
             code += codeLines + "\n"
         }
         return code + CommandType.HALT + "\n";
@@ -69,7 +89,7 @@ export default class CommandProcessor {
         }
     }
 
-    private static replaceGotoLines(commands: AbstractCommand[], reversedSymbolMap: Map<number, string>, code: string, mappedLines: MappedLines, allTokens: Token[]): string {
+    private static replaceGotoLines(commands: AbstractCommand[], reversedSymbolMap: Map<number, string>, code: string, mappedLines: MappedLines): string {
         for (let i = 0; i < commands.length; i++) {
             const current = commands[i];
             if (current instanceof GotoCommand || current instanceof IfCommand) {
