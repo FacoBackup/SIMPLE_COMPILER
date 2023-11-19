@@ -22,7 +22,7 @@
     ```
 - npm (node package manager) (é instalado junto ao nodejs)
 
-## Instuções de uso
+## Instruções de uso
 - Execute `npm install` na raiz do diretório
 - Execute `npm run build` para gerar o arquivo executável no diretório `build`
 - Entre no diretório `build`
@@ -30,35 +30,8 @@
 - Execute no terminal `node compiler.js <nomedoarquivo>` 
 - Único argumento é o nome do arquivo, tal deve estar no mesmo diretório que o arquivo `compiler.js`
 
+> **OBS:** Caso deseje gerar o código intermediário com **_comentários_** descrevendo cada linha, utilize o executável node `debug-compiler.js` ao invés do `compiler.js`
+
 ## Output
-O output do programa é dado em 3 partes, Lexico, sintático e semântico, como no exemplo abaixo:
+O output do programa é dado na escrita de um arquivo com nome de `compiled.smc`, onde `smc` é "simple machine code".
 
-```
-
------------------------------------------
-
-Lexical errors:
-
------------------------------------------
-
-Syntactic errors:
-
-    MESSAGE: Expected variable declaration but found otherwise
-    LINE: 7
-    COLUMN: 6
-    LINE WITH ERROR ---->  45 f = -1
-
-
------------------------------------------
-
-Semantic errors:
-
------------------------------------------
-
-```
-> ### OBS
-- Um erro acontecendo na etapa lexica irá bloquear a execução das etapas sintaticas e semanticas, assim como um erro na etapa sintatica irá bloquear a execução da etapa semantica
-
-- Sessões em vazio não contém erros
-
-- Caso o código seja válido, será enviada a mensagem `The source-code provided is valid`
